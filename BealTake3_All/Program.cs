@@ -17,13 +17,12 @@ namespace Cruncher
         /// ************ CONFIG **************
         const string root = @"m:\temp";
         //static string hashFileName = root + @"\hashes2x.bin";
-        static long skipLines = 40000;
+        static long skipLines = 0;
         static string hopesFormat = root + @"\hopes-bloom-{0}.txt";
 
         static void Main(string[] args)
         {
             Hashing.Initialize(null);
-
             Console.WriteLine("Starting the outer loop");
             long outerLine = 0;
             foreach (var outer in EnumerateChunks())

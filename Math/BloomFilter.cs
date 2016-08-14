@@ -41,6 +41,18 @@ namespace YMath
             }
         }
 
+        public void LoadFromFile(string fileName)
+        {
+            using (var br = new BinaryReader(File.Open(fileName, FileMode.Open)))
+            {
+                for (var i = 0; i < _hashBits.Count; ++i)
+                {
+                    byte b = br.ReadByte();
+                    _hashBits[i] = (b == 1);
+                }
+            }
+        }
+
         /// <summary>
         /// Creates a new Bloom filter, using the optimal size for the underlying data structure based on the desired capacity and error rate, as well as the optimal number of hash functions.
         /// A secondary hash function will be provided for you if your type T is either string or int. Otherwise an exception will be thrown. If you are not using these types please use the overload that supports custom hash functions.
