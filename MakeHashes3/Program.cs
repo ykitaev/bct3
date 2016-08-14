@@ -27,7 +27,7 @@ namespace MakeHashes3
                     var x = tup.Item2;
                     var ax = BigInteger.Pow(a, x);
                     var h1 = ax.GetHashCode();
-                    var h2 = Hashing.HashBigInt(ax);
+                    var h2 = Hashing.HashBigInt1(ax);
 
                     xl.Wait();
 

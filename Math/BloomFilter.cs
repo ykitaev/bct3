@@ -30,27 +30,12 @@ namespace YMath
 
         public void DumpBits(string fileName)
         {
-            Console.WriteLine("Dumping bloom filter...");
-            using (var bw = new BinaryWriter(File.Open(fileName, FileMode.Create)))
-            {
-                for (var i = 0; i < _hashBits.Count; ++i)
-                {
-                    byte b = _hashBits[i] ? (byte)1 : (byte)0;
-                    bw.Write(b);
-                }
-            }
+            Helper.DumpBits(fileName, this._hashBits);
         }
 
         public void LoadFromFile(string fileName)
         {
-            using (var br = new BinaryReader(File.Open(fileName, FileMode.Open)))
-            {
-                for (var i = 0; i < _hashBits.Count; ++i)
-                {
-                    byte b = br.ReadByte();
-                    _hashBits[i] = (b == 1);
-                }
-            }
+            Helper.LoadBitsFromFile(fileName, _hashBits);
         }
 
         /// <summary>

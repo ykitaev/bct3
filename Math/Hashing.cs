@@ -6,6 +6,7 @@ using System.Text;
 using DamienG.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Collections;
 
 namespace YMath
 {
@@ -13,18 +14,22 @@ namespace YMath
     {
         public const int bill2 = 2147483000;
         private static Crc32 crc = new Crc32();
-        private static BloomFilter<BigInteger> filter;
+
+        private static BitArray qfilter;
+        private static BloomFilter<BigInteger> filter1;
         private static BloomFilter<BigInteger> filter2;
+
         private static SemaphoreSlim filterLock = new SemaphoreSlim(1);
 
         internal static bool InHash(BigInteger t)
         {
-            if (!filter.Contains(t)) return false;
+            if (!qfilter[HashBigIntQuick(t)]) return false;
+            else if (!filter1.Contains(t)) return false;
             else if (!filter2.Contains(t)) return false;
             else return true;
         }
 
-        public static int HashBigInt(BigInteger b)
+        public static int HashBigInt1(BigInteger b)
         {
             var bytes = b.ToByteArray();
             var crcbytes = crc.ComputeHash(bytes);
@@ -41,13 +46,18 @@ namespace YMath
             return hash;
         }
 
+        public static int HashBigIntQuick(BigInteger b)
+        {
+            return (int)(Math.Abs((long)b.GetHashCode()) % bill2);
+        }
+
         internal static void Initialize(string fileName)
         {
             var t1 = Task.Run(() =>
             {
                 Console.WriteLine("Initializing Bloom Filter 1");
-                filter = new BloomFilter<BigInteger>(capacity: 178000000, errorRate: 0.004f, hashFunction: Hashing.HashBigInt);
-                filter.LoadFromFile(@"m:\temp\bloom-dump.bin");
+                filter1 = new BloomFilter<BigInteger>(capacity: 178000000, errorRate: 0.004f, hashFunction: Hashing.HashBigInt1);
+                filter1.LoadFromFile(@"m:\temp\bloom-dump.bin");
                 Console.WriteLine("Initializing done for filter 1");
             });
 
@@ -59,7 +69,34 @@ namespace YMath
                 Console.WriteLine("Initializing done for filter 2");
             });
 
-            Task.WhenAll(t1, t2).Wait();
+            var t3 = Task.Run(() =>
+            {
+                ///var cnt = 0;
+                Console.WriteLine("Loading qhash...");
+                qfilter = new BitArray(Hashing.bill2);
+                Helper.LoadBitsFromFile(@"m:\temp\qhash-dump1.bin", qfilter);
+                //// var ql = new SemaphoreSlim(1);
+                //// Console.WriteLine("Building quick hash...");
+                //// Parallel.ForEach(Powers.GenerateBaseAndExponentValues(), tup =>
+                //// {
+                ////     var num = BigInteger.Pow(tup.Item1, tup.Item2);
+                ////     var h = Hashing.HashBigIntQuick(num);
+                ////     ql.Wait();
+                ////     qfilter[h] = true;
+                ////     ++cnt;
+                ////     if (cnt % 1000000 == 0)
+                ////         Console.WriteLine("\tqhash has {0} mil", cnt/1000000);
+                ////     ql.Release();
+                //// });
+                //// 
+                //// Console.WriteLine("Building qhash done");
+                //// Console.WriteLine("Dumping bits...");
+                //// Helper.DumpBits(@"m:\temp\qhash-dump1.bin", qfilter);
+                //// Console.WriteLine("Dumping bits done");
+                Console.WriteLine("Loading qhash done");
+            });
+
+            Task.WhenAll(t1, t2, t3).Wait();
 
             //// var cnt = 0;
             //// Parallel.ForEach(Powers.GenerateBaseAndExponentValues(), tup =>

@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)BloomFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crc32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hashing.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Powers.cs" />
   </ItemGroup>
 </Project>
