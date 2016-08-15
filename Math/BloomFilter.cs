@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿/// <summary>
+/// Credit: Richard Kundl
+/// Source code: https://gist.github.com/richardkundl/8300092
+/// </summary>
 
 namespace YMath
 {
     using System;
     using System.Collections;
-    using System.IO;
 
     /// <summary>
     /// Bloom filter.

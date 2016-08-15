@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("bct3")]
-[assembly: AssemblyDescription("bct3")]
+[assembly: AssemblyTitle("Cruncher")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("bct3")]
-[assembly: AssemblyCopyright("Copyright © Yury Kitaev 2016")]
+[assembly: AssemblyProduct("Cruncher")]
+[assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("59183863-94ed-42e2-a643-91643680ac2e")]
+[assembly: Guid("813adbfb-2ee2-4602-958a-e9a788b3eece")]
 
 // Version information for an assembly consists of the following four values:
 //

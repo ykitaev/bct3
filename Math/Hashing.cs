@@ -75,24 +75,6 @@ namespace YMath
                 Console.WriteLine("Loading qhash...");
                 qfilter = new BitArray(Hashing.bill2);
                 Helper.LoadBitsFromFile(@"m:\temp\qhash-dump1.bin", qfilter);
-                //// var ql = new SemaphoreSlim(1);
-                //// Console.WriteLine("Building quick hash...");
-                //// Parallel.ForEach(Powers.GenerateBaseAndExponentValues(), tup =>
-                //// {
-                ////     var num = BigInteger.Pow(tup.Item1, tup.Item2);
-                ////     var h = Hashing.HashBigIntQuick(num);
-                ////     ql.Wait();
-                ////     qfilter[h] = true;
-                ////     ++cnt;
-                ////     if (cnt % 1000000 == 0)
-                ////         Console.WriteLine("\tqhash has {0} mil", cnt/1000000);
-                ////     ql.Release();
-                //// });
-                //// 
-                //// Console.WriteLine("Building qhash done");
-                //// Console.WriteLine("Dumping bits...");
-                //// Helper.DumpBits(@"m:\temp\qhash-dump1.bin", qfilter);
-                //// Console.WriteLine("Dumping bits done");
                 Console.WriteLine("Loading qhash done");
             });
 
