@@ -13,8 +13,6 @@
     {
         static void Main(string[] args)
         {
-            // TODO: test if this works
-            // TODO: unify file names, probably by factoring out to some config
             Console.WriteLine("Setup script running!");
 
             var filterLock = new SemaphoreSlim(initialCount: 1);

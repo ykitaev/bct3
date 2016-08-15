@@ -16,7 +16,7 @@
         private static readonly int chunkSize = 1000;
 
         /// ************ CONFIG **************
-        static long skipLines = chunkSize * 0;
+        static long skipLines = chunkSize * 1;
 
 
         static void Main(string[] args)
@@ -51,22 +51,22 @@
             Console.Write("-");
             foreach (var f in first)
             {
+                var a = f.Item1;
+                var x = f.Item2;
+                var ax = f.Item3;
+
                 foreach (var s in second)
                 {
-                    var t = f.Item3 + s.Item3;
+                    var b = s.Item1;
+                    var y = s.Item2;
+                    var by = s.Item3;
+
+                    if (SimpleMath.GCD(a, b) > 1)
+                        continue;
+
+                    var t = ax + by;
                     if (Hashing.InHash(t))
                     {
-                        var a = f.Item1;
-                        var b = s.Item1;
-                        if (BigInteger.GreatestCommonDivisor(a, b) > 1)
-                            continue;
-
-                        if (BigInteger.GreatestCommonDivisor(t, a) > 1)
-                            continue;
-
-                        if (BigInteger.GreatestCommonDivisor(t, b) > 1)
-                            continue;
-
                         var h = string.Format("{0}\t{1}\t{2}\t{3}", f.Item1, f.Item2, s.Item1, s.Item2);
                         hopelock.Wait();
                         sw.WriteLine(h);
@@ -84,7 +84,10 @@
 
             foreach (var tup in Powers.GenerateBaseAndExponentValues())
             {
-                chunk.Add(Tuple.Create(tup.Item1, tup.Item2, BigInteger.Pow(tup.Item1, tup.Item2)));
+                var a = tup.Item1;
+                var x = tup.Item2;
+                var ax = BigInteger.Pow(a, x);
+                chunk.Add(Tuple.Create(a, x, ax));
                 ++ctr;
                 if (ctr == chunkSize)
                 {
