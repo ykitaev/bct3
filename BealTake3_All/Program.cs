@@ -13,11 +13,12 @@ namespace Cruncher
     class Program
     {
         private static SemaphoreSlim hopelock = new SemaphoreSlim(1);
+        private static readonly int chunkSize = 1000;
 
         /// ************ CONFIG **************
         const string root = @"m:\temp";
         //static string hashFileName = root + @"\hashes2x.bin";
-        static long skipLines = 0;
+        static long skipLines = chunkSize * 0;
         static string hopesFormat = root + @"\hopes-bloom-{0}.txt";
 
         static void Main(string[] args)
@@ -80,7 +81,6 @@ namespace Cruncher
 
         private static IEnumerable<List<Tuple<int, int, BigInteger>>> EnumerateChunks()
         {
-            const int chunkSize = 10000;
             var chunk = new List<Tuple<int, int, BigInteger>>(chunkSize);
             long ctr = 0;
 
