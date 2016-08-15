@@ -16,7 +16,7 @@
         private static readonly int chunkSize = 1000;
 
         /// ************ CONFIG **************
-        static long skipLines = chunkSize * 1;
+        static long skipLines = chunkSize * 100;
 
 
         static void Main(string[] args)
@@ -36,9 +36,24 @@
                 var hopesFileName = string.Format(Constants.HopesFormat, outerLine);
                 using (var sw = new StreamWriter(hopesFileName))
                 {
+                    var innerLine = 0;
                     Parallel.ForEach(EnumerateChunks(), (inner, state) =>
                     {
-                        cross(outer, inner, sw);
+                        Interlocked.Add(ref innerLine, inner.Count);
+
+                        // Warning: It is possible that some other thread changes innerLine before the check below is done.
+                        // It's ok though, because then we'll just process an extra chunk (false positive). Though if we have too many of these 
+                        // races, then we should re-consider the approach. For now, it's simple enough to try.
+                        if (innerLine >= outerLine)
+                        {
+                            cross(outer, inner, sw);
+                        }
+                        else
+                        {
+                            // Skipped
+                            Console.Write(@"/");
+                        }
+
                     });
                 }
                 outerLine += outer.Count;
@@ -64,10 +79,10 @@
                     if (SimpleMath.GCD(a, b) > 1)
                         continue;
 
-                    var t = ax + by;
-                    if (Hashing.InHash(t))
+                    var cz = ax + by;
+                    if (Hashing.InHash(cz))
                     {
-                        var h = string.Format("{0}\t{1}\t{2}\t{3}", f.Item1, f.Item2, s.Item1, s.Item2);
+                        var h = string.Format("{0}\t{1}\t{2}\t{3}", a, x, b, y);
                         hopelock.Wait();
                         sw.WriteLine(h);
                         hopelock.Release();
