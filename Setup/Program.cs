@@ -1,5 +1,6 @@
 ﻿namespace Setup
 {
+    using Configuration;
     using System;
     using System.Collections;
     using System.Linq;
@@ -43,9 +44,9 @@
             
             Console.WriteLine("Building hashes done, dumping bits");
             
-            Helper.DumpBits(@"m:\temp\qhash-dump-1.bin", qfilter);
-            filter1.DumpBits(@"m:\temp\bloom-dump-1.bin");
-            filter2.DumpBits(@"m:\temp\bloom-dump-2.bin");
+            Helper.DumpBits(Constants.QuickHashDumpFileName, qfilter);
+            filter1.DumpBits(Constants.BloomFilterDumpFileName1);
+            filter2.DumpBits(Constants.BloomFilterDumpFileName2);
 
             Console.WriteLine("Checking truthiness...");
             Console.WriteLine("Filter 1: {0}", filter1.Truthiness);

@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using YMath;
-
-namespace Cruncher
+﻿namespace Cruncher
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Numerics;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using YMath;
+    using Configuration;
+
     class Program
     {
-        private static SemaphoreSlim hopelock = new SemaphoreSlim(1);
+        private static SemaphoreSlim hopelock = new SemaphoreSlim(initialCount: 1);
         private static readonly int chunkSize = 1000;
 
         /// ************ CONFIG **************
-        const string root = @"m:\temp";
-        //static string hashFileName = root + @"\hashes2x.bin";
         static long skipLines = chunkSize * 0;
-        static string hopesFormat = root + @"\hopes-bloom-{0}.txt";
+
 
         static void Main(string[] args)
         {
@@ -35,7 +33,7 @@ namespace Cruncher
                     continue;
                 }
 
-                var hopesFileName = string.Format(hopesFormat, outerLine);
+                var hopesFileName = string.Format(Constants.HopesFormat, outerLine);
                 using (var sw = new StreamWriter(hopesFileName))
                 {
                     Parallel.ForEach(EnumerateChunks(), (inner, state) =>

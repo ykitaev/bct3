@@ -7,6 +7,7 @@ using DamienG.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Collections;
+using Configuration;
 
 namespace YMath
 {
@@ -19,7 +20,7 @@ namespace YMath
         private static BloomFilter<BigInteger> filter1;
         private static BloomFilter<BigInteger> filter2;
 
-        private static SemaphoreSlim filterLock = new SemaphoreSlim(1);
+        private static SemaphoreSlim filterLock = new SemaphoreSlim(initialCount: 1);
 
         internal static bool InHash(BigInteger t)
         {
@@ -57,7 +58,7 @@ namespace YMath
             {
                 Console.WriteLine("Initializing Bloom Filter 1");
                 filter1 = new BloomFilter<BigInteger>(capacity: 178000000, errorRate: 0.004f, hashFunction: Hashing.HashBigInt1);
-                filter1.LoadFromFile(@"m:\temp\bloom-dump.bin");
+                filter1.LoadFromFile(Constants.BloomFilterDumpFileName1);
                 Console.WriteLine("Initializing done for filter 1");
             });
 
@@ -65,7 +66,7 @@ namespace YMath
             {
                 Console.WriteLine("Initializing Bloom Filter 2");
                 filter2 = new BloomFilter<BigInteger>(capacity: 178000000, errorRate: 0.004f, hashFunction: Hashing.HashBigInt2);
-                filter2.LoadFromFile(@"m:\temp\bloom-dump2.bin");
+                filter2.LoadFromFile(Constants.BloomFilterDumpFileName2);
                 Console.WriteLine("Initializing done for filter 2");
             });
 
@@ -74,31 +75,11 @@ namespace YMath
                 ///var cnt = 0;
                 Console.WriteLine("Loading qhash...");
                 qfilter = new BitArray(Hashing.bill2);
-                Helper.LoadBitsFromFile(@"m:\temp\qhash-dump1.bin", qfilter);
+                Helper.LoadBitsFromFile(Constants.QuickHashDumpFileName, qfilter);
                 Console.WriteLine("Loading qhash done");
             });
 
             Task.WhenAll(t1, t2, t3).Wait();
-
-            //// var cnt = 0;
-            //// Parallel.ForEach(Powers.GenerateBaseAndExponentValues(), tup =>
-            //// {
-            ////     var a = tup.Item1;
-            ////     var x = tup.Item2;
-            ////     var ax = BigInteger.Pow(a, x);
-            ////     filterLock.Wait();
-            ////     filter2.Add(ax);
-            ////     //if (!filter.Contains(ax)) throw new Exception("not deserialized right");
-            ////     ++cnt;
-            ////     if (cnt % 1000000 == 0)
-            ////     {
-            ////         Console.WriteLine("Checked {0}M in bloom filter", cnt / 1000000);
-            ////     }
-            ////     filterLock.Release();
-            //// });
-            //// 
-            //// Console.WriteLine("Initializing done, truthiness = {0}", filter2.Truthiness);
-            //// filter2.DumpBits(@"m:\temp\bloom-dump2.bin");
         }
     }
 }
