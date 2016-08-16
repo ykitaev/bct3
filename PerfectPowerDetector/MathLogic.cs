@@ -33,15 +33,16 @@
         private static void loadPrimeNumbers()
         {
             string line;
-            System.IO.StreamReader file = new System.IO.StreamReader(Constants.PrimesFileName);
-            int index = 0;
-            while ((line = file.ReadLine()) != null)
+            using (var file = new System.IO.StreamReader(Constants.PrimesFileName))
             {
-                int pr = Int32.Parse(line);
-                primes.Add(pr);
-                index++;
+                int index = 0;
+                while ((line = file.ReadLine()) != null)
+                {
+                    int pr = Int32.Parse(line);
+                    primes.Add(pr);
+                    index++;
+                }
             }
-            file.Close();
         }
 
         /// <summary>
