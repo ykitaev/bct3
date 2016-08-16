@@ -11,10 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup", "Setup\Setup.csproj
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Configuration", "Configuration\Configuration.shproj", "{B27BD1F9-EC44-44E0-B639-99C4266FBCB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerfectPowerDetector", "PerfectPowerDetector\PerfectPowerDetector.csproj", "{1874B56E-A694-4B6A-8ECB-9077CF8041F2}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Configuration\Configuration.projitems*{b27bd1f9-ec44-44e0-b639-99c4266fbcb2}*SharedItemsImports = 13
 		Math\Math.projitems*{1cde3a26-330a-43d3-a427-e4afacee68e1}*SharedItemsImports = 13
+		Configuration\Configuration.projitems*{1874b56e-a694-4b6a-8ecb-9077cf8041f2}*SharedItemsImports = 4
+		Math\Math.projitems*{1874b56e-a694-4b6a-8ecb-9077cf8041f2}*SharedItemsImports = 4
 		Configuration\Configuration.projitems*{813adbfb-2ee2-4602-958a-e9a788b3eece}*SharedItemsImports = 4
 		Math\Math.projitems*{813adbfb-2ee2-4602-958a-e9a788b3eece}*SharedItemsImports = 4
 		Configuration\Configuration.projitems*{1861bf55-91cf-4719-9aba-fcd451399eb1}*SharedItemsImports = 4
@@ -43,6 +47,14 @@ Global
 		{1861BF55-91CF-4719-9ABA-FCD451399EB1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1861BF55-91CF-4719-9ABA-FCD451399EB1}.Release|x64.ActiveCfg = Release|Any CPU
 		{1861BF55-91CF-4719-9ABA-FCD451399EB1}.Release|x64.Build.0 = Release|Any CPU
+		{1874B56E-A694-4B6A-8ECB-9077CF8041F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1874B56E-A694-4B6A-8ECB-9077CF8041F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1874B56E-A694-4B6A-8ECB-9077CF8041F2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1874B56E-A694-4B6A-8ECB-9077CF8041F2}.Debug|x64.Build.0 = Debug|Any CPU
+		{1874B56E-A694-4B6A-8ECB-9077CF8041F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1874B56E-A694-4B6A-8ECB-9077CF8041F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1874B56E-A694-4B6A-8ECB-9077CF8041F2}.Release|x64.ActiveCfg = Release|Any CPU
+		{1874B56E-A694-4B6A-8ECB-9077CF8041F2}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
