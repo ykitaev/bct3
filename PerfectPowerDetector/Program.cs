@@ -23,30 +23,38 @@
         static void Main(string[] args)
         {
             boot();
-            var cnt = 0;
-            Console.WriteLine("Computing cz and checking if it's a perfect power...");
-            var fileName = @"M:\temp\test.txt";
-            var lines = File.ReadAllLines(fileName);
-            foreach (var l in lines)
+            var fileNames = new List<string>()
             {
-                var parts = l.Split('\t');
-                var a = int.Parse(parts[0]);
-                var x = int.Parse(parts[1]);
-                var b = int.Parse(parts[2]);
-                var y = int.Parse(parts[3]);
+                @"M:\temp\hopes-bloom-5000.txt"
+            };
 
-                var cz = BigInteger.Pow(a, x) + BigInteger.Pow(b, y);
-                var res = isSuitablePower(cz);
-                if (res)
+            foreach (var fileName in fileNames)
+            {
+                Console.WriteLine("Verifying file " + fileName);
+                var cnt = 0;
+                var lines = File.ReadAllLines(fileName);
+                foreach (var l in lines)
                 {
-                    var str = l + Environment.NewLine;
-                    File.AppendAllText(Constants.DreamsFileName, str);
-                }
+                    var parts = l.Split('\t');
+                    var a = int.Parse(parts[0]);
+                    var x = int.Parse(parts[1]);
+                    var b = int.Parse(parts[2]);
+                    var y = int.Parse(parts[3]);
 
-                cnt++;
-                if (cnt % 10000 == 0)
-                {
-                    Console.WriteLine("Done {0}/{1}", cnt, lines.Count());
+                    var cz = BigInteger.Pow(a, x) + BigInteger.Pow(b, y);
+                    var res = isSuitablePower(cz);
+                    if (res)
+                    {
+                        Console.WriteLine("*** Wow, something passed our filter!");
+                        var str = l + Environment.NewLine;
+                        File.AppendAllText(Constants.DreamsFileName, str);
+                    }
+
+                    cnt++;
+                    if (cnt % 100000 == 0)
+                    {
+                        Console.WriteLine("Done {0}/{1}", cnt, lines.Count());
+                    }
                 }
             }
         }

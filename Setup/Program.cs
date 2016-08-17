@@ -19,9 +19,9 @@
 
             Console.WriteLine("Generating prime numers");
             var primesMax = 50847534;
-            var primesGenerated = 0;
-            var candidate = 2;
-            var primes = new List<int>(primesMax);
+            var primes = new List<int>(primesMax) { 2 };
+            var primesGenerated = 1;
+            var candidate = 3;
             while (primesGenerated < primesMax)
             {
                 var boundary = Math.Ceiling(Math.Sqrt(candidate));
@@ -56,15 +56,14 @@
                             Console.WriteLine("Done {0}M", primesGenerated/1000000);
                     }
 
-                    ++candidate;
+                    candidate += 2;
                 }
             }
 
             Console.WriteLine("Prime number generation done, writing to file...");
-            File.WriteAllLines(@"m:\temp\pppp.txt", primes.Select(p => p.ToString()));
+            File.WriteAllLines(Constants.PrimesFileName, primes.Select(p => p.ToString()));
             Console.WriteLine("Primary numers written");
 
-            return;
             var filterLock = new SemaphoreSlim(initialCount: 1);
             var qfilter = new BitArray(Hashing.bill2); ;
             var filter1 = new BloomFilter<BigInteger>(capacity: 178000000, errorRate: 0.004f, hashFunction: Hashing.HashBigInt1);

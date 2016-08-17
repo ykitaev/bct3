@@ -10,6 +10,6 @@
         public static readonly string BloomFilterDumpFileName2 = root + @"\bloom-dump2.bin";
         public static readonly string QuickHashDumpFileName = root + @"\quick-hash-dump.bin";
         public static readonly string DreamsFileName = root + @"\dreams.txt";
-        public static readonly string PrimesFileName = @"R:\yu\My World\Programming\myprimes.txt";
+        public static readonly string PrimesFileName = root + @"\generated-primes.txt";
     }
 }
