@@ -9,20 +9,24 @@
     using System.Threading.Tasks;
     using YMath;
     using Configuration;
+    using System.Diagnostics;
 
     class Program
     {
         private static SemaphoreSlim hopelock = new SemaphoreSlim(initialCount: 1);
         private static readonly int chunkSize = 1000;
 
-        /// ************ CONFIG **************
-        static long skipLines = chunkSize * 100;
-
+        private static long skipLines = chunkSize * 5;
+        private static long innerBatchesDone = 0;
+        private static Stopwatch stopwatch = new Stopwatch();
+        private static TimeSpan last;
 
         static void Main(string[] args)
         {
             Hashing.Initialize(null);
             Console.WriteLine("Starting the outer loop");
+
+            stopwatch.Start();
             long outerLine = 0;
             foreach (var outer in EnumerateChunks())
             {
@@ -33,8 +37,10 @@
                     continue;
                 }
 
+                stopwatch.Restart();
+                last = new TimeSpan(0);
                 var hopesFileName = string.Format(Constants.HopesFormat, outerLine);
-                using (var sw = new StreamWriter(hopesFileName))
+                using (var streamWriter = new StreamWriter(hopesFileName))
                 {
                     var innerLine = 0;
                     Parallel.ForEach(EnumerateChunks(), (inner, state) =>
@@ -46,12 +52,11 @@
                         // races, then we should re-consider the approach. For now, it's simple enough to try.
                         if (innerLine >= outerLine)
                         {
-                            cross(outer, inner, sw);
+                            cross(outer, inner, streamWriter);
                         }
                         else
                         {
                             // Skipped
-                            Console.Write(@"/");
                         }
 
                     });
@@ -63,7 +68,16 @@
 
         private static void cross(List<Tuple<int, int, BigInteger>> first, List<Tuple<int, int, BigInteger>> second, StreamWriter sw)
         {
-            Console.Write("-");
+            var ibd = Interlocked.Increment(ref innerBatchesDone);
+            if (ibd % 100 == 0)
+            {
+                Console.WriteLine("Done {0} total elapsed: {1}, last batch took {2}s", 
+                    ibd, 
+                    stopwatch.Elapsed.ToString(@"d\d\:h\h\:m\m\:s\s", System.Globalization.CultureInfo.InvariantCulture),
+                    (int)((stopwatch.Elapsed - last).TotalSeconds));
+                last = stopwatch.Elapsed;
+            }
+
             foreach (var f in first)
             {
                 var a = f.Item1;
