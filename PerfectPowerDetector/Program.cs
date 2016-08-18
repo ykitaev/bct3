@@ -70,8 +70,9 @@
                     // blob.FetchAttributes();
                     var name = blob.Name;
                     var textFileName = name.Replace(".zip", ".txt");
-                    var textFilePath = Constants.root + @"\" + textFileName;
-                    if (File.Exists(textFilePath))
+                    var textFilePath = Constants.UnCheckedHopedFilesFolderName + textFileName;
+                    var checkedTextFilePath = Constants.CheckedHopedFilesFolderName + textFileName;
+                    if (File.Exists(checkedTextFilePath))
                     {
                         Console.WriteLine("File '{0}' already exists, skipping", textFileName);
                         continue;
