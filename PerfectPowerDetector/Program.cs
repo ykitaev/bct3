@@ -31,9 +31,7 @@
             // First, check the files locally on disk, if there are any files
             var fileNames = new List<string>()
             {
-               @"M:\temp\hopes-bloom-5000.txt",
-               @"M:\temp\hopes-bloom-6000.txt",
-               @"M:\temp\hopes-bloom-7000.txt",
+               //@"M:\temp\hopes-bloom-102000.txt",
             };
 
             foreach (var fileName in fileNames)
@@ -76,6 +74,7 @@
                     if (File.Exists(textFilePath))
                     {
                         Console.WriteLine("File '{0}' already exists, skipping", textFileName);
+                        continue;
                     }
 
                     using (var stream = blob.OpenRead())
@@ -96,16 +95,17 @@
 
         private static void ProcessFile(string fileName)
         {
+            var errors = 0;
             Console.WriteLine("Checking file " + fileName);
             var cnt = 0;
             var lines = File.ReadAllLines(fileName);
             foreach (var l in lines)
             {
                 var parts = l.Split('\t');
-                if (parts.Length != 4 
-                    && l == lines.Last())
+                if (parts.Length != 4)
                 {
-                    Console.WriteLine("Last line was incomplete, skipping");
+                    Console.WriteLine("Invalid line format, skipping!");
+                    ++errors;
                     break;
                 }
 
@@ -128,6 +128,11 @@
                 {
                     Console.WriteLine("Done {0}/{1}", cnt, lines.Count());
                 }
+            }
+
+            if (errors > 5)
+            {
+                throw new Exception("Too many errors, this is strange: " + errors);
             }
         }
     }

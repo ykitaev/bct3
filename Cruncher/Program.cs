@@ -39,6 +39,7 @@
                 }
 
                 stopwatch.Restart();
+                innerBatchesDone = 0;
                 last = new TimeSpan(0);
                 var hopesFileName = string.Format(Constants.HopesFileNameFormat, outerLine);
                 var hopesFileNameZip = hopesFileName.Replace(".txt", ".zip");
@@ -91,7 +92,7 @@
             var ibd = Interlocked.Increment(ref innerBatchesDone);
             if (ibd % 100 == 0)
             {
-                Console.WriteLine("Done {0} total elapsed: {1}, last batch took {2}s", 
+                Console.WriteLine("Done {0}, total elapsed: {1}, last 100 batches took {2}s", 
                     ibd, 
                     stopwatch.Elapsed.ToString(@"d\d\:h\h\:m\m\:s\s", System.Globalization.CultureInfo.InvariantCulture),
                     (int)((stopwatch.Elapsed - last).TotalSeconds));
