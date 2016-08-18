@@ -52,7 +52,7 @@ namespace YMath
             return (int)(Math.Abs((long)b.GetHashCode()) % bill2);
         }
 
-        internal static void Initialize(string fileName)
+        internal static void Initialize()
         {
             var t1 = Task.Run(() =>
             {

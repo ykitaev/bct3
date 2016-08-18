@@ -56,7 +56,7 @@
         {
             // Decided not to do "yield return" for now because I want all my blobs downloaded and extracted first
             var newFiles = new List<string>();
-            var storageAccount = CloudStorageAccount.Parse(File.ReadAllText(Constants.BlobConnectionStringFileName));
+            var storageAccount = CloudStorageAccount.Parse(File.ReadAllText(Constants.AzureConnectionStringFileName));
             var blobClient = storageAccount.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference("hopes");
             BlobContinuationToken continuationToken = null;
