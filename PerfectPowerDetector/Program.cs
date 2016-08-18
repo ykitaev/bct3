@@ -1,9 +1,12 @@
 ﻿namespace PerfectPowerDetector
 {
     using Configuration;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Blob;
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Numerics;
     using System.Text;
@@ -23,38 +26,107 @@
         static void Main(string[] args)
         {
             boot();
+            var cnt = 0;
+
+            // First, check the files locally on disk, if there are any files
             var fileNames = new List<string>()
             {
-                @"M:\temp\hopes-bloom-5000.txt"
+               @"M:\temp\hopes-bloom-5000.txt",
+               @"M:\temp\hopes-bloom-6000.txt",
+               @"M:\temp\hopes-bloom-7000.txt",
             };
 
             foreach (var fileName in fileNames)
             {
-                Console.WriteLine("Verifying file " + fileName);
-                var cnt = 0;
-                var lines = File.ReadAllLines(fileName);
-                foreach (var l in lines)
+                ProcessFile(fileName);
+                ++cnt;
+            }
+
+            // Then, check the blob storage
+            var fromBlob = GetNewHopesFromBlobs();
+            foreach (var fileName in fromBlob)
+            {
+                ProcessFile(fileName);
+                ++cnt;
+            }
+
+            Console.WriteLine("Done. {0} files checked. Press any key to quit...", cnt);
+            Console.ReadKey();
+        }
+
+        private static List<string> GetNewHopesFromBlobs()
+        {
+            // Decided not to do "yield return" for now because I want all my blobs downloaded and extracted first
+            var newFiles = new List<string>();
+            var storageAccount = CloudStorageAccount.Parse(File.ReadAllText(Constants.BlobConnectionStringFileName));
+            var blobClient = storageAccount.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference("hopes");
+            BlobContinuationToken continuationToken = null;
+            do
+            {
+                var segment = container.ListBlobsSegmented(continuationToken);
+                continuationToken = segment.ContinuationToken;
+                foreach (var item in segment.Results)
                 {
-                    var parts = l.Split('\t');
-                    var a = int.Parse(parts[0]);
-                    var x = int.Parse(parts[1]);
-                    var b = int.Parse(parts[2]);
-                    var y = int.Parse(parts[3]);
-
-                    var cz = BigInteger.Pow(a, x) + BigInteger.Pow(b, y);
-                    var res = isSuitablePower(cz);
-                    if (res)
+                    var blob = (CloudBlockBlob)item;
+                    // blob.FetchAttributes();
+                    var name = blob.Name;
+                    var textFileName = name.Replace(".zip", ".txt");
+                    var textFilePath = Constants.root + @"\" + textFileName;
+                    if (File.Exists(textFilePath))
                     {
-                        Console.WriteLine("*** Wow, something passed our filter!");
-                        var str = l + Environment.NewLine;
-                        File.AppendAllText(Constants.DreamsFileName, str);
+                        Console.WriteLine("File '{0}' already exists, skipping", textFileName);
                     }
 
-                    cnt++;
-                    if (cnt % 100000 == 0)
+                    using (var stream = blob.OpenRead())
                     {
-                        Console.WriteLine("Done {0}/{1}", cnt, lines.Count());
+                        using (var archive = new ZipArchive(stream, ZipArchiveMode.Read))
+                        {
+                            archive.Entries.Single().ExtractToFile(textFilePath);
+                        }
                     }
+
+                    newFiles.Add(textFilePath);
+                }
+            }
+            while (continuationToken != null);
+
+            return newFiles;
+        }
+
+        private static void ProcessFile(string fileName)
+        {
+            Console.WriteLine("Checking file " + fileName);
+            var cnt = 0;
+            var lines = File.ReadAllLines(fileName);
+            foreach (var l in lines)
+            {
+                var parts = l.Split('\t');
+                if (parts.Length != 4 
+                    && l == lines.Last())
+                {
+                    Console.WriteLine("Last line was incomplete, skipping");
+                    break;
+                }
+
+                var a = int.Parse(parts[0]);
+                var x = int.Parse(parts[1]);
+                var b = int.Parse(parts[2]);
+                var y = int.Parse(parts[3]);
+
+                var cz = BigInteger.Pow(a, x) + BigInteger.Pow(b, y);
+                var res = isSuitablePower(cz);
+                if (res)
+                {
+                    Console.WriteLine("*** Wow, something passed our filter!");
+                    var str = l + Environment.NewLine;
+                    File.AppendAllText(Constants.DreamsFileName, str);
+                }
+
+                cnt++;
+                if (cnt % 100000 == 0)
+                {
+                    Console.WriteLine("Done {0}/{1}", cnt, lines.Count());
                 }
             }
         }
