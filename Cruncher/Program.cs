@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Numerics;
     using System.Threading;
@@ -16,7 +17,7 @@
         private static SemaphoreSlim hopelock = new SemaphoreSlim(initialCount: 1);
         private static readonly int chunkSize = 1000;
 
-        private static long skipLines = chunkSize * 5;
+        private static long skipLines = chunkSize * 1010;
         private static long innerBatchesDone = 0;
         private static Stopwatch stopwatch = new Stopwatch();
         private static TimeSpan last;
@@ -39,7 +40,15 @@
 
                 stopwatch.Restart();
                 last = new TimeSpan(0);
-                var hopesFileName = string.Format(Constants.HopesFormat, outerLine);
+                var hopesFileName = string.Format(Constants.HopesFileNameFormat, outerLine);
+                var hopesFileNameZip = hopesFileName.Replace(".txt", ".zip");
+                if (File.Exists(hopesFileNameZip))
+                {
+                    Console.WriteLine("Batch starting at '{0}' already processed and zipped, skipping", outerLine);
+                    outerLine += outer.Count;
+                    continue;
+                }
+
                 using (var streamWriter = new StreamWriter(hopesFileName))
                 {
                     var innerLine = 0;
@@ -61,6 +70,17 @@
 
                     });
                 }
+
+                Console.WriteLine("Compressing '{0}'", hopesFileName);
+                using (FileStream fs = new FileStream(hopesFileNameZip, FileMode.Create))
+                using (ZipArchive arch = new ZipArchive(fs, ZipArchiveMode.Create))
+                {
+                    arch.CreateEntryFromFile(hopesFileName, hopesFileName.Split('\\').Last());
+                }
+
+                Console.WriteLine("Uploading '{0}' to blob storage...", hopesFileNameZip);
+                NetworkCoordinator.UploadHopesBlobAsync(hopesFileNameZip).Wait();
+
                 outerLine += outer.Count;
             }
         }
