@@ -58,12 +58,12 @@
 
                 if (cnt == 0)
                 {
-                    Console.WriteLine("Waiting for an hour since there were no new files...");
-                    Task.Delay(TimeSpan.FromHours(1)).Wait();
+                    Console.WriteLine("Waiting for 2h since there were no new files");
+                    Task.Delay(TimeSpan.FromHours(2)).Wait();
                 }
                 else
                 {
-                    Console.WriteLine("Waiting for 1 minute, just in case there is a bug...");
+                    Console.WriteLine("Waiting for 1 minute, just in case there is a bug");
                     Task.Delay(TimeSpan.FromMinutes(1)).Wait();
                 }
 
@@ -138,7 +138,7 @@
                 var res = isSuitablePower(cz);
                 if (res)
                 {
-                    Console.WriteLine("*** Wow, something passed our filter!");
+                    Console.WriteLine("*** Wow, something passed our filter! ***");
                     var str = l + Environment.NewLine;
                     File.AppendAllText(Constants.DreamsFileName, str);
                 }
