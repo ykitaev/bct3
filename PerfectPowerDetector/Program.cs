@@ -40,22 +40,41 @@
                 ++cnt;
             }
 
-            // Then, check the blob storage
-            var fromBlob = GetNewHopesFromBlobs();
-            foreach (var fileName in fromBlob)
+            while (true)
             {
-                ProcessFile(fileName);
-                ++cnt;
-            }
 
-            Console.WriteLine("Done. {0} files checked. Press any key to quit...", cnt);
-            Console.ReadKey();
+                // Then, check the blob storage
+                var fromBlob = GetNewHopesFromBlobs();
+                foreach (var fileNamePair in fromBlob)
+                {
+                    var uncheckedFileName = fileNamePair.Item1;
+                    var checkedFileName = fileNamePair.Item2;
+                    ProcessFile(uncheckedFileName);
+                    File.Move(uncheckedFileName, checkedFileName);
+                    ++cnt;
+                }
+
+                Console.WriteLine("Processed {0} files. ", cnt);
+
+                if (cnt == 0)
+                {
+                    Console.WriteLine("Waiting for an hour since there were no new files...");
+                    Task.Delay(TimeSpan.FromHours(1)).Wait();
+                }
+                else
+                {
+                    Console.WriteLine("Waiting for 1 minute, just in case there is a bug...");
+                    Task.Delay(TimeSpan.FromMinutes(1)).Wait();
+                }
+
+                cnt = 0;
+            }
         }
 
-        private static List<string> GetNewHopesFromBlobs()
+        private static List<Tuple<string, string>> GetNewHopesFromBlobs()
         {
             // Decided not to do "yield return" for now because I want all my blobs downloaded and extracted first
-            var newFiles = new List<string>();
+            var newFiles = new List<Tuple<string, string>>();
             var storageAccount = CloudStorageAccount.Parse(File.ReadAllText(Constants.AzureConnectionStringFileName));
             var blobClient = storageAccount.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference("hopes");
@@ -70,11 +89,11 @@
                     // blob.FetchAttributes();
                     var name = blob.Name;
                     var textFileName = name.Replace(".zip", ".txt");
-                    var textFilePath = Constants.UnCheckedHopedFilesFolderName + textFileName;
+                    var uncheckedTextFilePath = Constants.UnCheckedHopedFilesFolderName + textFileName;
                     var checkedTextFilePath = Constants.CheckedHopedFilesFolderName + textFileName;
                     if (File.Exists(checkedTextFilePath))
                     {
-                        Console.WriteLine("File '{0}' already exists, skipping", textFileName);
+                        // Console.WriteLine("File '{0}' already exists, skipping", textFileName);
                         continue;
                     }
 
@@ -82,11 +101,11 @@
                     {
                         using (var archive = new ZipArchive(stream, ZipArchiveMode.Read))
                         {
-                            archive.Entries.Single().ExtractToFile(textFilePath);
+                            archive.Entries.Single().ExtractToFile(uncheckedTextFilePath);
                         }
                     }
 
-                    newFiles.Add(textFilePath);
+                    newFiles.Add(Tuple.Create(uncheckedTextFilePath, checkedTextFilePath));
                 }
             }
             while (continuationToken != null);
