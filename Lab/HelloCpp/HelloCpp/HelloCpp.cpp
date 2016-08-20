@@ -7,6 +7,11 @@
 #include <vector>
 #include <sstream>
 #include <string>
+#include <tuple>
+
+#include "bigint-2010.04.30\BigIntegerLibrary.hh"
+#include "BloomFilterBigInteger.cpp"
+
 using namespace std; 
 
 class PowerIter
@@ -64,31 +69,40 @@ public:
 		}
 		return temp; 
 	}
-	string operator*() {
-		std::ostringstream stringStream;
-		stringStream << base << "^" << pow;
-		std::string copyOfStr = stringStream.str();
-		return copyOfStr;
+	tuple<int,int> operator*() {
+		return make_tuple(base, pow);
 	}
 	bool operator==(PowerIter x) { return x.base == base && x.pow == pow ; }
 	bool operator!=(PowerIter x) { return x.base != base || x.pow != pow; }
 };
 
 
-
+BigInteger xpow(const int b, const int e)
+{
+	if (e == 1)
+		return b;
+	else
+	{
+		auto e1 = e / 2;
+		auto e2 = e - e1;
+		auto ax1 = xpow(b, e1);
+		auto ax2 = xpow(b, e2);
+		return ax1 * ax2;
+	}
+}
 
 vector<string> ix = { initializer_list<string>{"a", "bb", "cc", "dddddd"} };
 int main()
 {
-	static_assert(sizeof(int) >= 4, "Ints should be at least 4 bytes lol");
-
 	 auto i = PowerIter();
 	 PowerIter p;
 	 for (p= begin(i); p != i.end(); ++p)
 	 {
 	 	//cout << (*p).c_str() << endl;
 	 }
-	 cout << (*p).c_str() << endl;
+	 cout << get<0>(*p) << "^" << get<1>(*p) << endl;
+	 BloomFilter<1, 3> bb(12, 0.2, nullptr);
 	return 0;
 }
+
 

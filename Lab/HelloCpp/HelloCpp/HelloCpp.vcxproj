@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,13 +19,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -79,12 +79,30 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bigint-2010.04.30\BigInteger.hh" />
+    <ClInclude Include="bigint-2010.04.30\BigIntegerAlgorithms.hh" />
+    <ClInclude Include="bigint-2010.04.30\BigIntegerLibrary.hh" />
+    <ClInclude Include="bigint-2010.04.30\BigIntegerUtils.hh" />
+    <ClInclude Include="bigint-2010.04.30\BigUnsigned.hh" />
+    <ClInclude Include="bigint-2010.04.30\BigUnsignedInABase.hh" />
+    <ClInclude Include="bigint-2010.04.30\NumberlikeArray.hh" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bigint-2010.04.30\BigInteger.cc" />
+    <ClCompile Include="bigint-2010.04.30\BigIntegerAlgorithms.cc" />
+    <ClCompile Include="bigint-2010.04.30\BigIntegerUtils.cc" />
+    <ClCompile Include="bigint-2010.04.30\BigUnsigned.cc" />
+    <ClCompile Include="bigint-2010.04.30\BigUnsignedInABase.cc" />
+    <ClCompile Include="bigint-2010.04.30\sample.cc" />
+    <ClCompile Include="BloomFilterBigInteger.cpp" />
     <ClCompile Include="HelloCpp.cpp" />
     <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bigint-2010.04.30\ChangeLog" />
+    <None Include="bigint-2010.04.30\README" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

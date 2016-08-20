@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\bigint-2010.04.30">
+      <UniqueIdentifier>{1d0c7dbc-8513-4817-aa31-6ca62d1ced48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -24,6 +27,27 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bigint-2010.04.30\BigInteger.hh">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClInclude>
+    <ClInclude Include="bigint-2010.04.30\BigIntegerAlgorithms.hh">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClInclude>
+    <ClInclude Include="bigint-2010.04.30\BigIntegerLibrary.hh">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClInclude>
+    <ClInclude Include="bigint-2010.04.30\BigIntegerUtils.hh">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClInclude>
+    <ClInclude Include="bigint-2010.04.30\BigUnsigned.hh">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClInclude>
+    <ClInclude Include="bigint-2010.04.30\BigUnsignedInABase.hh">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClInclude>
+    <ClInclude Include="bigint-2010.04.30\NumberlikeArray.hh">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -32,5 +56,34 @@
     <ClCompile Include="HelloCpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bigint-2010.04.30\BigInteger.cc">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClCompile>
+    <ClCompile Include="bigint-2010.04.30\BigIntegerAlgorithms.cc">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClCompile>
+    <ClCompile Include="bigint-2010.04.30\BigIntegerUtils.cc">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClCompile>
+    <ClCompile Include="bigint-2010.04.30\BigUnsigned.cc">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClCompile>
+    <ClCompile Include="bigint-2010.04.30\BigUnsignedInABase.cc">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClCompile>
+    <ClCompile Include="bigint-2010.04.30\sample.cc">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomFilterBigInteger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bigint-2010.04.30\ChangeLog">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </None>
+    <None Include="bigint-2010.04.30\README">
+      <Filter>Source Files\bigint-2010.04.30</Filter>
+    </None>
   </ItemGroup>
 </Project>
