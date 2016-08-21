@@ -90,18 +90,39 @@ BigInteger xpow(const int b, const int e)
 		return ax1 * ax2;
 	}
 }
+unsigned int crc32_internal(unsigned int crc, const char *buf, size_t size);
+int crc(BigInteger big)
+{
+	// Achievement unlocked: using reinterpret_cast!
+	return crc32_internal(0xBABABABA, reinterpret_cast<const char *>(big.mag.blk), big.mag.getLength() * sizeof(unsigned long));
+}
 
 vector<string> ix = { initializer_list<string>{"a", "bb", "cc", "dddddd"} };
 int main()
 {
+	 BloomFilter<8> bf(178000000, 0.004f, crc);
+
 	 auto i = PowerIter();
 	 PowerIter p;
+	 auto cnt = 0;
+	 long checksum = 0;
 	 for (p= begin(i); p != i.end(); ++p)
 	 {
-	 	//cout << (*p).c_str() << endl;
+		 auto base = get<0>(*p);
+		 auto exp = get<1>(*p);
+		 auto ax = xpow(base, exp);
+		 auto c = crc(ax);
+		 auto hc = ax.GetHashCode();
+		 checksum += (c + hc);
+		 //bf.Add(ax);
+		 ++cnt;
+		 if (cnt % 1000000 == 0)
+			 cout << cnt << endl;
 	 }
-	 cout << get<0>(*p) << "^" << get<1>(*p) << endl;
-	 BloomFilter<1, 3> bb(12, 0.2, nullptr);
+	 // cout << get<0>(*p) << "^" << get<1>(*p) << endl;
+
+	 // cout << bf.Truthiness();
+	 cout << checksum;
 	return 0;
 }
 

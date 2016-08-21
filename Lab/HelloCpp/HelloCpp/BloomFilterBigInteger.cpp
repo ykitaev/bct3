@@ -1,12 +1,14 @@
 #include <bitset>
 #include "bigint-2010.04.30\BigInteger.hh"
+#include<vector>
 using namespace std;
 
-template <int M, int K>
+template <int K>
 class BloomFilter
 {
 	int _hashFunctionCount;
-	bitset<M> _hashBits;
+	//bitset<2045611135> *_hashBits;
+	vector<bool>* _hashBits;
 	typedef int(*hash)(BigInteger b);
 	hash _getHashSecondary;
 
@@ -32,12 +34,6 @@ public:
 			throw "errorRate must be between 0 and 1, exclusive.";
 		}
 
-		// from overflow in bestM calculation
-		if (M < 1)
-		{
-			throw "The provided capacity and errorRate values would result in an array of length > int.MaxValue. Please reduce either of these values";
-		}
-
 		// set the secondary hash function
 		if (hashFunction == nullptr)
 		{
@@ -49,6 +45,7 @@ public:
 		}
 
 		_hashFunctionCount = K;
+		_hashBits = new vector<bool>(2045611135);
 	}
 
 	/// <summary>
@@ -56,7 +53,13 @@ public:
 	/// </summary>
 	double Truthiness()
 	{
-		return (double)this.TrueBits() / this._hashBits.Count;
+		return (double)TrueBits() / _hashBits->count();
+	}
+
+	// Haha I remember to do this! Unique pointer would have been neater but this is cooler.
+	~BloomFilter()
+	{
+		if (_hashBits != nullptr) delete _hashBits;
 	}
 
 	/// <summary>
@@ -70,8 +73,8 @@ public:
 		int secondaryHash = _getHashSecondary(item);
 		for (auto i = 0; i < _hashFunctionCount; ++i)
 		{
-			int hash = this.ComputeHash(primaryHash, secondaryHash, i);
-			_hashBits[hash] = true;
+			int hash = ComputeHash(primaryHash, secondaryHash, i);
+			(*_hashBits)[hash] = true;
 		}
 	}
 
@@ -122,7 +125,7 @@ public:
 	/// <returns> The <see cref="int"/>. </returns>
 	int ComputeHash(int primaryHash, int secondaryHash, int i)
 	{
-		int resultingHash = (primaryHash + (i * secondaryHash)) % _hashBits.count;
+		int resultingHash = (primaryHash + (i * secondaryHash)) % 2045611135;
 		return abs(resultingHash);
 	}
 };

@@ -15,6 +15,9 @@
     {
         static void Main(string[] args)
         {
+            var filter11 = new BloomFilter<BigInteger>(capacity: 178000000, errorRate: 0.004f, hashFunction: Hashing.HashBigInt1);
+            var filter22 = new BloomFilter<BigInteger>(capacity: 178000000, errorRate: 0.004f, hashFunction: Hashing.HashBigInt2);
+            return;
             Console.WriteLine("Setup script running!");
 
             Console.WriteLine("Generating prime numers");

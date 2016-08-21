@@ -25,9 +25,10 @@ public:
 
 protected:
 	Sign sign;
-	BigUnsigned mag;
 
 public:
+	BigUnsigned mag;
+
 	// Constructs zero.
 	BigInteger() : sign(zero), mag() {}
 
@@ -89,7 +90,8 @@ public:
 	bool isZero() const { return sign == zero; } // A bit special
 
 	int GetHashCode() { 
-		auto l = mag.getLength
+		auto l = mag.getBlock(mag.getLength() - 1);
+		return (int)l;
 	}
 
 	// COMPARISONS

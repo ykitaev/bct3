@@ -32,8 +32,21 @@
                 {
                     long outerLine = 0;
 
-                    var batchIndex = NetworkCoordinator.GetNextFreeBatchIndex().Result;
-                    Console.WriteLine("Checked out batch " + batchIndex);
+                    // Check if we aleady have a batch checked out
+                    int batchIndex;
+                    if (File.Exists(Constants.StateFileName))
+                    {
+                        var state = File.ReadAllText(Constants.StateFileName);
+                        batchIndex = int.Parse(state);
+                        Console.WriteLine("Batch index determined from state: {0}", batchIndex);
+                    }
+                    else
+                    {
+                        batchIndex = NetworkCoordinator.GetNextFreeBatchIndex().Result;
+                        File.WriteAllText(Constants.StateFileName, batchIndex.ToString());
+                        Console.WriteLine("Checked out batch " + batchIndex);
+                    }
+
                     var skipLines = batchIndex * chunkSize;
                     foreach (var outer in EnumerateChunks())
                     {
@@ -91,13 +104,19 @@
                         Console.WriteLine("Marking the batch as Crunched");
                         NetworkCoordinator.MarkCrunched(batchIndex).Wait();
 
+                        if (File.Exists(Constants.StateFileName))
+                        {
+                            File.Delete(Constants.StateFileName);
+                            Console.WriteLine("Local state is cleared.");
+                        }
+
                         break;
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.StackTrace);
+                Console.WriteLine(e.Message + " - " + e.StackTrace);
                 Console.ReadKey();
                 Console.ReadKey();
             }

@@ -10,7 +10,7 @@
  * The number is stored as a NumberlikeArray of unsigned longs as if it were
  * written in base 256^sizeof(unsigned long).  The least significant block is
  * first, and the length is such that the most significant block is nonzero. */
-class BigUnsigned : protected NumberlikeArray<unsigned long> {
+class BigUnsigned : public NumberlikeArray<unsigned long> {
 
 public:
 	// Enumeration for the result of a comparison.

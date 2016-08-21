@@ -77,6 +77,9 @@
     <ClCompile Include="BloomFilterBigInteger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Crc32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="bigint-2010.04.30\ChangeLog">
