@@ -34,7 +34,14 @@
 
                     // Check if we aleady have a batch checked out
                     int batchIndex;
-                    if (File.Exists(Constants.StateFileName))
+                    if (File.Exists(Constants.ManualOverrideFileName))
+                    {
+                        // Manual intervention to the operation of this method, at runtime. Check this before checking state.
+                        // Probably used to recover from a crash of an older version that doesn't use state.txt
+                        batchIndex = int.Parse(File.ReadAllText(Constants.ManualOverrideFileName));
+                        Console.WriteLine("Manual intervention, processing batch: " + batchIndex);                        
+                    }
+                    else if (File.Exists(Constants.StateFileName))
                     {
                         var state = File.ReadAllText(Constants.StateFileName);
                         batchIndex = int.Parse(state);
@@ -104,7 +111,13 @@
                         Console.WriteLine("Marking the batch as Crunched");
                         NetworkCoordinator.MarkCrunched(batchIndex).Wait();
 
-                        if (File.Exists(Constants.StateFileName))
+                        // Try delete the override first. Only if failed, then try to delete state (we don't want to delete both)
+                        if (File.Exists(Constants.ManualOverrideFileName))
+                        {
+                            Console.WriteLine("Override is cleared.");
+                            File.Delete(Constants.ManualOverrideFileName);
+                        }
+                        else if (File.Exists(Constants.StateFileName))
                         {
                             File.Delete(Constants.StateFileName);
                             Console.WriteLine("Local state is cleared.");

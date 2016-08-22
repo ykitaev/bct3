@@ -14,5 +14,6 @@
         public static readonly string PrimesFileName = root + @"\generated-primes.txt";
         public static readonly string AzureConnectionStringFileName = root + @"\blob.azconf";
         public static readonly string StateFileName = root + @"\state.txt";
+        public static readonly string ManualOverrideFileName = root + @"\override.txt";
     }
 }
