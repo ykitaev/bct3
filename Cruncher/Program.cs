@@ -39,7 +39,7 @@
                         // Manual intervention to the operation of this method, at runtime. Check this before checking state.
                         // Probably used to recover from a crash of an older version that doesn't use state.txt
                         batchIndex = int.Parse(File.ReadAllText(Constants.ManualOverrideFileName));
-                        Console.WriteLine("Manual intervention, processing batch: " + batchIndex);                        
+                        Console.WriteLine("Manual intervention, processing batch: {0}", batchIndex);                        
                     }
                     else if (File.Exists(Constants.StateFileName))
                     {
