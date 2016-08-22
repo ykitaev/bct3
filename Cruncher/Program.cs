@@ -15,6 +15,7 @@
     class Program
     {
         private static SemaphoreSlim hopelock = new SemaphoreSlim(initialCount: 1);
+        private static SemaphoreSlim batchlock = new SemaphoreSlim(initialCount: 1);
         private static readonly int chunkSize = 1000;
 
         private static long innerBatchesDone = 0;
@@ -178,6 +179,7 @@
 
         private static IEnumerable<List<Tuple<int, int, BigInteger>>> EnumerateChunks()
         {
+            batchlock.Wait();
             var chunk = new List<Tuple<int, int, BigInteger>>(chunkSize);
             long ctr = 0;
 
@@ -190,7 +192,9 @@
                 ++ctr;
                 if (ctr == chunkSize)
                 {
+                    batchlock.Release();
                     yield return chunk;
+                    batchlock.Wait();
                     ctr = 0;
                     chunk = new List<Tuple<int, int, BigInteger>>();
                 }
