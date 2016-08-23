@@ -18,8 +18,8 @@ namespace YMath
                     yield return Tuple.Create(b, p);
                     ++p;
 
-                    //if (b > 889283)
-                    if (b > 3183)
+                    if (b > 889283)
+                    //if (b > 3183)
                     {
                         done = true;
                         break;

@@ -64,7 +64,6 @@
            /// File.WriteAllLines(Constants.PrimesFileName, primes.Select(p => p.ToString()));
            /// Console.WriteLine("Primary numers written");
 
-           // var filterLock = new SemaphoreSlim(initialCount: 1);
             var qfilter = new BitArray(Hashing.bill2); ;
             var filter1 = new BloomFilter<BigInteger>(capacity: 178000000, errorRate: 0.004f, hashFunction: Hashing.HashBigInt1);
             var filter2 = new BloomFilter<BigInteger>(capacity: 178000000, errorRate: 0.004f, hashFunction: Hashing.HashBigInt2);
@@ -77,7 +76,6 @@
                 var ax = BigInteger.Pow(a, x);
                 var quickHash = Hashing.HashBigIntQuick(ax);
 
-              //filterLock.Wait();
                 {
                     qfilter[quickHash] = true;
                     filter1.Add(ax);
@@ -86,7 +84,6 @@
                     if (counter % 1000000 == 0)
                         Console.WriteLine("{0} million processed", counter / 1000000);
                 }
-              // filterLock.Release();
             }
             
             Console.WriteLine("Building hashes done, dumping bits");

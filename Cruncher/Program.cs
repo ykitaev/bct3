@@ -58,8 +58,8 @@
                     }
 
                     var skipLines = batchIndex * chunkSize;
-                    var opg = new PowersEnumerator();
-                    foreach (var outer in EnumerateChunks(outerBatchlock))
+                    var opg = new BatchEnumerator();
+                    foreach (var outer in opg.EnumerateBatches())
                     {
                         Console.WriteLine("Outer loop starts line {0} with A^x = {1}^{2}", outerLine, outer.First().Item1, outer.First().Item2);
                         if (outerLine < skipLines)
@@ -73,20 +73,14 @@
                         last = new TimeSpan(0);
                         var hopesFileName = string.Format(Constants.HopesFileNameFormat, outerLine);
                         var hopesFileNameZip = hopesFileName.Replace(".txt", ".zip");
-                        if (File.Exists(hopesFileNameZip))
-                        {
-                            Console.WriteLine("Batch starting at '{0}' already processed and zipped, skipping", outerLine);
-                            outerLine += outer.Count;
-                            continue;
-                        }
 
                         using (var streamWriter = new StreamWriter(hopesFileName))
                         {
                             var innerLine = 0;
-                            var ipg = new PowersEnumerator();
+                            var ipg = new BatchEnumerator();
 
-                            foreach (var inner in EnumerateChunks(innerBatchlock))
-                            //Parallel.ForEach(EnumerateChunks(innerBatchlock), (inner, state) =>
+                            // foreach (var inner in EnumerateChunks(innerBatchlock))
+                            Parallel.ForEach(ipg.EnumerateBatches(), (inner, state) =>
                             {
                                 Interlocked.Add(ref innerLine, inner.Count);
 
@@ -95,14 +89,14 @@
                                 // races, then we should re-consider the approach. For now, it's simple enough to try.
                                 //if (innerLine >= outerLine)
                                 //{
-                                    cross(outer, inner, streamWriter);
-                               // }
-                               // else
-                               // {
-                                    // Skipped
-                               // }
+                                cross(outer, inner, streamWriter);
+                                // }
+                                // else
+                                // {
+                                // Skipped
+                                // }
 
-                            }
+                            });
                         }
 
                         Console.WriteLine("Compressing '{0}'", hopesFileName);

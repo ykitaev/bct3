@@ -9,6 +9,7 @@
     <Import_RootNamespace>YMath</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BatchEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BloomFilter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Crc32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hashing.cs" />
