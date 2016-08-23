@@ -204,7 +204,7 @@
                     throw new InvalidOperationException("panic");
                 }
             }
+            batchlock.Release();
         }
-
     }
 }
