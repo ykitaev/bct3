@@ -26,22 +26,21 @@ namespace YMath
 
         private List<Tuple<int, int, BigInteger>> Next()
         {
-            lock(ss)
+            ss.Wait();
+            var list = new List<Tuple<int, int, BigInteger>>(1000);
+            if (!HasMore()) return list;
+            for (var i = 0; i < 1000 && pg.HasMore(); ++i)
             {
-                var list = new List<Tuple<int, int, BigInteger>>(1000);
-                for (var i = 0; i < 1000 && pg.HasMore(); ++i)
-                {
-                    var tup = pg.Next();
-                    var a = tup.Item1;
-                    var x = tup.Item2;
-                    var ax = BigInteger.Pow(a, x);
-                    list.Add(Tuple.Create(a, x, ax));
-                }
-
-                this.hasMore = pg.HasMore();
-
-                return list;
+                var tup = pg.Next();
+                var a = tup.Item1;
+                var x = tup.Item2;
+                var ax = BigInteger.Pow(a, x);
+                list.Add(Tuple.Create(a, x, ax));
             }
+
+            this.hasMore = pg.HasMore();
+            ss.Release();
+            return list;
         }
 
         public IEnumerable<List<Tuple<int, int, BigInteger>>> EnumerateBatches()

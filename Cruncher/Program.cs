@@ -11,6 +11,7 @@
     using YMath;
     using Configuration;
     using System.Diagnostics;
+    using System.Collections.Concurrent;
 
     class Program
     {
@@ -27,6 +28,31 @@
         {
             try
             {
+                unchecked
+                {
+                    var tbd = new BatchEnumerator();
+                    long serialSum = 0;
+                    foreach (var b in tbd.EnumerateBatches())
+                    {
+                        serialSum += b.Sum(i => i.Item1 + i.Item2);
+                    }
+
+                    Console.WriteLine("Serial sum: " + serialSum);
+                    for (var i = 0; i < 10; ++i)
+                    {
+                        var pbd = new BatchEnumerator();
+                        long psum = 0;
+                        Parallel.ForEach(pbd.EnumerateBatches(), batch =>
+                        {
+                            foreach (var b in batch)
+                                Interlocked.Add(ref psum, b.Item1 + b.Item2);
+                        });
+
+                        Console.WriteLine("psum " + i + " : " + psum);
+                    }
+                }
+                Console.ReadKey();
+
                 Hashing.Initialize();
                 RunTests();
                 stopwatch.Start();
@@ -59,8 +85,9 @@
 
                     var skipLines = batchIndex * chunkSize;
                     var opg = new BatchEnumerator();
-                    foreach (var outer in opg.EnumerateBatches())
+                    foreach (var outerCollection in opg.EnumerateBatches())
                     {
+                        var outer = new List<Tuple<int, int, BigInteger>>(outerCollection);
                         Console.WriteLine("Outer loop starts line {0} with A^x = {1}^{2}", outerLine, outer.First().Item1, outer.First().Item2);
                         if (outerLine < skipLines)
                         {
@@ -169,8 +196,9 @@
                 last = stopwatch.Elapsed;
             }
 
-            foreach (var f in first)
+            for (var i = 0; i < first.Count; ++i)
             {
+                var f = first[i];
                 var a = f.Item1;
                 var x = f.Item2;
                 var ax = f.Item3;
@@ -188,9 +216,11 @@
                     if (Hashing.InHash(cz))
                     {
                         var hope = string.Format("{0}\t{1}\t{2}\t{3}", a, x, b, y);
-                        hopelock.Wait();
-                        sw.WriteLine(hope);
-                        hopelock.Release();
+                        lock (hopelock)//.Wait(); 
+                        {
+                            sw.WriteLine(hope);
+                        }
+                        //hopelock.Release();
                     }
                 }
             }

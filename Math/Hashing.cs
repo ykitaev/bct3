@@ -67,7 +67,7 @@ namespace YMath
                 Console.WriteLine("Initializing Bloom Filter 2");
                 filter2 = new BloomFilter<BigInteger>(capacity: 178000000, errorRate: 0.004f, hashFunction: Hashing.HashBigInt2);
                 filter2.LoadFromFile(Constants.BloomFilterDumpFileName2);
-                Console.WriteLine("Initializing done for filter 2");
+            Console.WriteLine("Initializing done for filter 2");
             });
 
             var t3 = Task.Run(() =>
