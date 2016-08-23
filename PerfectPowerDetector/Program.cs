@@ -14,7 +14,6 @@
 
     partial class Program
     {
-        private static Random r = new Random();
         private static DateTime startTime = DateTime.Now;
 
         /// <summary>
