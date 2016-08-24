@@ -157,34 +157,6 @@ namespace Cruncher
             var p2 = new byte[60000];
             var p3 = new byte[56059];
 
-            // Flag some batches as already processed
-            p1[0] = (byte)BatchState.Verified;
-            p1[1] = (byte)BatchState.Verified;
-            p1[2] = (byte)BatchState.Verified;
-            p1[3] = (byte)BatchState.Verified;
-            p1[4] = (byte)BatchState.Verified;
-            p1[5] = (byte)BatchState.Verified;
-            p1[6] = (byte)BatchState.Verified;
-
-            p1[100] = (byte)BatchState.Verified;
-            p1[101] = (byte)BatchState.Verified;
-            p1[102] = (byte)BatchState.Verified;
-            p1[103] = (byte)BatchState.Verified;
-            p1[104] = (byte)BatchState.Verified;
-
-            p1[1000] = (byte)BatchState.Verified;
-            p1[1001] = (byte)BatchState.Verified;
-            p1[1002] = (byte)BatchState.Verified;
-            p1[1003] = (byte)BatchState.Verified;
-            p1[1004] = (byte)BatchState.Verified;
-            p1[1005] = (byte)BatchState.Verified;
-            p1[1006] = (byte)BatchState.Verified;
-            p1[1007] = (byte)BatchState.Verified;
-            p1[1008] = (byte)BatchState.Verified;
-            p1[1009] = (byte)BatchState.Verified;
-            p1[1010] = (byte)BatchState.Verified;
-            p1[1011] = (byte)BatchState.Verified;
-
             var blank = new Map()
             {
                 part1 = p1,
