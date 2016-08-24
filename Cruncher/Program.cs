@@ -28,7 +28,6 @@
         {
             try
             {
-                NetworkCoordinator.InitializeBlankState().Wait();
                 Hashing.Initialize();
                 RunTests();
                 stopwatch.Start();
