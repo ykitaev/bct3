@@ -37,7 +37,7 @@ namespace YMath
                 b = k;
                 e = 3;
 
-                if (b > 3183)
+                if (b > 889283)
                     hasMore = false;
             }
 

@@ -17,52 +17,52 @@
         {
             Console.WriteLine("Setup script running!");
 
-           /// Console.WriteLine("Generating prime numers");
-           /// var primesMax = 50847534;
-           /// var primes = new List<int>(primesMax) { 2 };
-           /// var primesGenerated = 1;
-           /// var candidate = 3;
-           /// while (primesGenerated < primesMax)
-           /// {
-           ///     var boundary = Math.Ceiling(Math.Sqrt(candidate));
-           ///     var good = true;
-           ///     var done = false;
-           ///     while (!done)
-           ///     {
-           ///         foreach (var p in primes)
-           ///         {
-           ///             if (p > boundary)
-           ///             {
-           ///                 good = true;
-           ///                 done = true;
-           ///                 break;
-           ///             }
-           ///             else
-           ///             {
-           ///                 if (candidate % p == 0)
-           ///                 {
-           ///                     done = true;
-           ///                     good = false;
-           ///                     break;
-           ///                 }
-           ///             }
-           ///         }
-           ///         if (good)
-           ///         {
-           ///             primes.Add(candidate);
-           ///             ++primesGenerated;
-           ///
-           ///             if (primesGenerated % 1000000 == 0)
-           ///                 Console.WriteLine("Done {0}M", primesGenerated/1000000);
-           ///         }
-           ///
-           ///         candidate += 2;
-           ///     }
-           /// }
-           ///
-           /// Console.WriteLine("Prime number generation done, writing to file...");
-           /// File.WriteAllLines(Constants.PrimesFileName, primes.Select(p => p.ToString()));
-           /// Console.WriteLine("Primary numers written");
+            Console.WriteLine("Generating prime numers");
+            var primesMax = 50847534;
+            var primes = new List<int>(primesMax) { 2 };
+            var primesGenerated = 1;
+            var candidate = 3;
+            while (primesGenerated < primesMax)
+            {
+                var boundary = Math.Ceiling(Math.Sqrt(candidate));
+                var good = true;
+                var done = false;
+                while (!done)
+                {
+                    foreach (var p in primes)
+                    {
+                        if (p > boundary)
+                        {
+                            good = true;
+                            done = true;
+                            break;
+                        }
+                        else
+                        {
+                            if (candidate % p == 0)
+                            {
+                                done = true;
+                                good = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (good)
+                    {
+                        primes.Add(candidate);
+                        ++primesGenerated;
+            
+                        if (primesGenerated % 1000000 == 0)
+                            Console.WriteLine("Done {0}M", primesGenerated/1000000);
+                    }
+            
+                    candidate += 2;
+                }
+            }
+            
+            Console.WriteLine("Prime number generation done, writing to file...");
+            File.WriteAllLines(Constants.PrimesFileName, primes.Select(p => p.ToString()));
+            Console.WriteLine("Primary numers written");
 
             var qfilter = new BitArray(Hashing.bill2); ;
             var filter1 = new BloomFilter<BigInteger>(capacity: 178000000, errorRate: 0.004f, hashFunction: Hashing.HashBigInt1);

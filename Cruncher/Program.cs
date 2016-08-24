@@ -28,33 +28,8 @@
         {
             try
             {
-               //  unchecked
-               //  {
-               //      var tbd = new BatchEnumerator();
-               //      long serialSum = 0;
-               //      foreach (var b in tbd.EnumerateBatches())
-               //      {
-               //          serialSum += b.Sum(i => i.Item1 + i.Item2);
-               //      }
-               // 
-               //      Console.WriteLine("Serial sum: " + serialSum);
-               //      for (var i = 0; i < 10; ++i)
-               //      {
-               //          var pbd = new BatchEnumerator();
-               //          long psum = 0;
-               //          Parallel.ForEach(pbd.EnumerateBatches(), batch =>
-               //          {
-               //              foreach (var b in batch)
-               //                  Interlocked.Add(ref psum, b.Item1 + b.Item2);
-               //          });
-               // 
-               //          Console.WriteLine("psum " + i + " : " + psum);
-               //      }
-               //  }
-               //  Console.ReadKey();
-
                 Hashing.Initialize();
-               //  RunTests();
+                RunTests();
                 stopwatch.Start();
 
                 while (true)
@@ -85,9 +60,8 @@
 
                     var skipLines = batchIndex * chunkSize;
                     var opg = new BatchEnumerator();
-                    foreach (var outerCollection in opg.EnumerateBatches())
+                    foreach (var outer in opg.EnumerateBatches())
                     {
-                        var outer = new List<Tuple<int, int, BigInteger>>(outerCollection);
                         Console.WriteLine("Outer loop starts line {0} with A^x = {1}^{2}", outerLine, outer.First().Item1, outer.First().Item2);
                         if (outerLine < skipLines)
                         {
@@ -106,11 +80,11 @@
                             var innerLine = 0;
                             var ipg = new BatchEnumerator();
 
-                            // foreach (var inner in EnumerateChunks(innerBatchlock))
                             Parallel.ForEach(ipg.EnumerateBatches(), (inner, state) =>
                             {
                                 Interlocked.Add(ref innerLine, inner.Count);
 
+                                // TODO: Enable this check later when it starts to matter that we re-process early batches
                                 // Warning: It is possible that some other thread changes innerLine before the check below is done.
                                 // It's ok though, because then we'll just process an extra chunk (false positive). Though if we have too many of these 
                                 // races, then we should re-consider the approach. For now, it's simple enough to try.
@@ -126,9 +100,6 @@
                             });
                         }
 
-                        File.WriteAllLines(@"M:\temp\bla-r3.txt", result);
-                        Console.WriteLine("Lines written: " + result.Count);
-
                         Console.WriteLine("Compressing '{0}'", hopesFileName);
                         using (FileStream fs = new FileStream(hopesFileNameZip, FileMode.Create))
                         using (ZipArchive arch = new ZipArchive(fs, ZipArchiveMode.Create))
@@ -141,8 +112,6 @@
 
                         Console.WriteLine("Marking the batch as Crunched");
                         NetworkCoordinator.MarkCrunched(batchIndex).Wait();
-
-                        Console.ReadKey();
 
                         // Try delete the override first. Only if failed, then try to delete state (we don't want to delete both)
                         if (File.Exists(Constants.ManualOverrideFileName))
@@ -172,7 +141,7 @@
         {
             Console.WriteLine("Running tests..");
             var r = new Random();
-            var every = r.Next(100, 200);
+            var every = r.Next(150, 300);
             Console.WriteLine("Going to verify ever {0}th number", every);
             int i = 0;
             foreach (var tup in Powers.GenerateBaseAndExponentValues())
@@ -189,9 +158,10 @@
             return i;
         }
 
-        private static List<string> result = new List<string>(100000);
-
-        private static void cross(List<Tuple<int, int, BigInteger>> first, List<Tuple<int, int, BigInteger>> second, StreamWriter sw)
+        private static void cross(
+            List<Tuple<int, int, BigInteger>> first, 
+            List<Tuple<int, int, BigInteger>> second, 
+            StreamWriter sw)
         {
             var ibd = Interlocked.Increment(ref innerBatchesDone);
             if (ibd % 100 == 0)
@@ -223,58 +193,12 @@
                     if (Hashing.InHash(cz))
                     {
                         var hope = string.Format("{0}\t{1}\t{2}\t{3}", a, x, b, y);
-                        lock (hopelock)//.Wait(); 
-                        {
-                            sw.WriteLine(hope);
-                            result.Add(hope);
-                        }
-                        //hopelock.Release();
+                        hopelock.Wait(); 
+                        sw.WriteLine(hope);
+                        hopelock.Release();
                     }
                 }
             }
         }
-
-
-      private static IEnumerable<List<Tuple<int, int, BigInteger>>> EnumerateChunks(SemaphoreSlim batchLock)
-      {
-          batchLock.Wait();
-          var chunk = new List<Tuple<int, int, BigInteger>>(chunkSize);
-          long ctr = 0;
-      
-          foreach (var tup in Powers.GenerateBaseAndExponentValues())
-          {
-              var a = tup.Item1;
-              var x = tup.Item2;
-              var ax = BigInteger.Pow(a, x);
-              chunk.Add(Tuple.Create(a, x, ax));
-              ++ctr;
-              if (ctr == chunkSize)
-              {
-                  var copy = new List<Tuple<int, int, BigInteger>>(chunk);
-                  batchLock.Release();
-                  yield return copy;
-                  batchLock.Wait();
-                  ctr = 0;
-                  chunk = new List<Tuple<int, int, BigInteger>>();
-              }
-          }
-      
-          batchLock.Release();
-          yield return chunk;
-      }
-
-        //private static IEnumerable<List<Tuple<int, int, BigInteger>>> EnumerateChunks2(SemaphoreSlim batchLock, PowersEnumerator pg)
-        //{
-        //    lock(batchLock)
-        //    {
-        //        var chunk = new List<Tuple<int, int, BigInteger>>(chunkSize);
-        //        for (var i = 0; i < chunkSize && pg.HasMore(); ++i)
-        //        {
-        //            var t = pg.Next();
-        //            chunk.Add(Tuple.Create(t.Item1, t.Item2, BigInteger.Pow(t.Item1, t.Item2)));
-        //        }
-        //        yield return chunk;
-        //    }
-        //}
     }
 }

@@ -6,6 +6,7 @@ namespace YMath
 {
     static class Powers
     {
+        // TODO: remove, use class instead
         internal static IEnumerable<Tuple<int, int>> GenerateBaseAndExponentValues()
         {
             var k = 1;

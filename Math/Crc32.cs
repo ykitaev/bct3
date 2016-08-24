@@ -14,6 +14,7 @@ namespace DamienG.Security.Cryptography
     /// Implements a 32-bit CRC hash algorithm compatible with Zip etc.
     /// </summary>
     /// <remarks>
+    /// NOT THREAD SAFE!
     /// Crc32 should only be used for backward compatibility with older file formats
     /// and algorithms. It is not secure enough for new applications.
     /// If you need to call multiple times for the same data either use the HashAlgorithm

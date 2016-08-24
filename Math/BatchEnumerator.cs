@@ -8,6 +8,7 @@ namespace YMath
 {
     class BatchEnumerator
     {
+        const int BatchSize = 1000;
         private PowersEnumerator pg;
         private SemaphoreSlim ss;
         private bool hasMore;
@@ -27,9 +28,9 @@ namespace YMath
         private List<Tuple<int, int, BigInteger>> Next()
         {
             ss.Wait();
-            var list = new List<Tuple<int, int, BigInteger>>(1000);
+            var list = new List<Tuple<int, int, BigInteger>>(BatchSize);
             if (!HasMore()) return list;
-            for (var i = 0; i < 1000 && pg.HasMore(); ++i)
+            for (var i = 0; i < BatchSize && pg.HasMore(); ++i)
             {
                 var tup = pg.Next();
                 var a = tup.Item1;
