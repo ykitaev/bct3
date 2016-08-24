@@ -142,8 +142,10 @@
             var every = r.Next(150, 300);
             Console.WriteLine("Going to verify ever {0}th number", every);
             int i = 0;
-            foreach (var tup in Powers.GenerateBaseAndExponentValues())
+            var pg = new PowersEnumerator();
+            while(pg.HasMore())
             {
+                var tup = pg.Next();
                 if (i % every == 0)
                 {
                     var ax = BigInteger.Pow(tup.Item1, tup.Item2);
@@ -152,7 +154,7 @@
                 }
                 ++i;
             }
-            Console.WriteLine("testing is complete");
+            Console.WriteLine("Testing is complete");
             return i;
         }
 
