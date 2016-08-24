@@ -28,33 +28,33 @@
         {
             try
             {
-                unchecked
-                {
-                    var tbd = new BatchEnumerator();
-                    long serialSum = 0;
-                    foreach (var b in tbd.EnumerateBatches())
-                    {
-                        serialSum += b.Sum(i => i.Item1 + i.Item2);
-                    }
-
-                    Console.WriteLine("Serial sum: " + serialSum);
-                    for (var i = 0; i < 10; ++i)
-                    {
-                        var pbd = new BatchEnumerator();
-                        long psum = 0;
-                        Parallel.ForEach(pbd.EnumerateBatches(), batch =>
-                        {
-                            foreach (var b in batch)
-                                Interlocked.Add(ref psum, b.Item1 + b.Item2);
-                        });
-
-                        Console.WriteLine("psum " + i + " : " + psum);
-                    }
-                }
-                Console.ReadKey();
+               //  unchecked
+               //  {
+               //      var tbd = new BatchEnumerator();
+               //      long serialSum = 0;
+               //      foreach (var b in tbd.EnumerateBatches())
+               //      {
+               //          serialSum += b.Sum(i => i.Item1 + i.Item2);
+               //      }
+               // 
+               //      Console.WriteLine("Serial sum: " + serialSum);
+               //      for (var i = 0; i < 10; ++i)
+               //      {
+               //          var pbd = new BatchEnumerator();
+               //          long psum = 0;
+               //          Parallel.ForEach(pbd.EnumerateBatches(), batch =>
+               //          {
+               //              foreach (var b in batch)
+               //                  Interlocked.Add(ref psum, b.Item1 + b.Item2);
+               //          });
+               // 
+               //          Console.WriteLine("psum " + i + " : " + psum);
+               //      }
+               //  }
+               //  Console.ReadKey();
 
                 Hashing.Initialize();
-                RunTests();
+               //  RunTests();
                 stopwatch.Start();
 
                 while (true)
@@ -126,6 +126,9 @@
                             });
                         }
 
+                        File.WriteAllLines(@"M:\temp\bla-r3.txt", result);
+                        Console.WriteLine("Lines written: " + result.Count);
+
                         Console.WriteLine("Compressing '{0}'", hopesFileName);
                         using (FileStream fs = new FileStream(hopesFileNameZip, FileMode.Create))
                         using (ZipArchive arch = new ZipArchive(fs, ZipArchiveMode.Create))
@@ -138,6 +141,8 @@
 
                         Console.WriteLine("Marking the batch as Crunched");
                         NetworkCoordinator.MarkCrunched(batchIndex).Wait();
+
+                        Console.ReadKey();
 
                         // Try delete the override first. Only if failed, then try to delete state (we don't want to delete both)
                         if (File.Exists(Constants.ManualOverrideFileName))
@@ -184,6 +189,8 @@
             return i;
         }
 
+        private static List<string> result = new List<string>(100000);
+
         private static void cross(List<Tuple<int, int, BigInteger>> first, List<Tuple<int, int, BigInteger>> second, StreamWriter sw)
         {
             var ibd = Interlocked.Increment(ref innerBatchesDone);
@@ -219,6 +226,7 @@
                         lock (hopelock)//.Wait(); 
                         {
                             sw.WriteLine(hope);
+                            result.Add(hope);
                         }
                         //hopelock.Release();
                     }

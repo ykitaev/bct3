@@ -14,13 +14,14 @@ namespace YMath
     public static class Hashing
     {
         public const int bill2 = 2147483000;
-        private static Crc32 crc = new Crc32();
 
         private static BitArray qfilter;
         private static BloomFilter<BigInteger> filter1;
         private static BloomFilter<BigInteger> filter2;
 
         private static SemaphoreSlim filterLock = new SemaphoreSlim(initialCount: 1);
+        private static SemaphoreSlim xlock = new SemaphoreSlim(initialCount: 1);
+
 
         internal static bool InHash(BigInteger t)
         {
@@ -32,6 +33,8 @@ namespace YMath
 
         public static int HashBigInt1(BigInteger b)
         {
+       
+            var crc = new Crc32();
             var bytes = b.ToByteArray();
             var crcbytes = crc.ComputeHash(bytes);
             var hash = BitConverter.ToInt32(crcbytes, startIndex: 0);
@@ -40,6 +43,7 @@ namespace YMath
 
         public static int HashBigInt2(BigInteger b)
         {
+            var crc = new Crc32();
             var b2 = BigInteger.Divide(b, 1000000);
             var bytes = b2.ToByteArray();
             var crcbytes = crc.ComputeHash(bytes);
