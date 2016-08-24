@@ -16,8 +16,6 @@
     class Program
     {
         private static SemaphoreSlim hopelock = new SemaphoreSlim(initialCount: 1);
-        private static SemaphoreSlim outerBatchlock = new SemaphoreSlim(initialCount: 1);
-        private static SemaphoreSlim innerBatchlock = new SemaphoreSlim(initialCount: 1);
         private static readonly int chunkSize = 1000;
 
         private static long innerBatchesDone = 0;
