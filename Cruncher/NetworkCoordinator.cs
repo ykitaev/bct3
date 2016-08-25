@@ -14,6 +14,9 @@ namespace Cruncher
 {
     static class NetworkCoordinator
     {
+        private static DateTime LastCheckedIn = new DateTime(2007, 1, 1);
+        private static TimeSpan CheckInInterval = TimeSpan.FromMinutes(30);
+
         public static async Task UploadHopesBlobAsync(string fileName)
         {
             var storageAccount = CloudStorageAccount.Parse(File.ReadAllText(Constants.AzureConnectionStringFileName));
@@ -25,6 +28,38 @@ namespace Cruncher
             {
                 await blockBlob.UploadFromStreamAsync(fileStream);
             }
+        }
+
+        public static async Task ReportStatusIfNecessary()
+        {
+            if (DateTime.UtcNow - LastCheckedIn < CheckInInterval)
+            {
+                return;
+            }
+
+            try
+            {
+                var entity = new MachineStatus()
+                {
+                    LastActiveUtc = DateTime.UtcNow,
+                };
+
+                Console.WriteLine("Reporting activity for device '{0}'", entity.DeviceName);
+                var storageAccount = CloudStorageAccount.Parse(File.ReadAllText(Constants.AzureConnectionStringFileName));
+                var tableClient = storageAccount.CreateCloudTableClient();
+                var table = tableClient.GetTableReference("devices");
+
+
+                TableOperation insertOperation = TableOperation.InsertOrReplace(entity);
+                var res = await table.ExecuteAsync(insertOperation);
+                Console.WriteLine("Status report result: " + res.HttpStatusCode);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to report status: " + e.Message);
+            }
+
+            LastCheckedIn = DateTime.UtcNow;
         }
 
         public static async Task<int> GetNextFreeBatchIndex()
@@ -204,6 +239,20 @@ namespace Cruncher
 
             // Last 56059
             public byte[] part3 { get; set; }
+        }
+
+        private class MachineStatus : TableEntity
+        {
+            public MachineStatus()
+            {
+                this.PartitionKey = "devices";
+                this.RowKey = Math.Abs(Environment.MachineName.GetHashCode()).ToString();
+                this.DeviceName = Environment.MachineName;
+            }
+
+            public string DeviceName { get; private set; }
+
+            public DateTime LastActiveUtc { get; set; }
         }
     }
 }

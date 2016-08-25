@@ -171,6 +171,8 @@
                     stopwatch.Elapsed.ToString(@"d\d\:h\h\:m\m\:s\s", System.Globalization.CultureInfo.InvariantCulture),
                     (int)((stopwatch.Elapsed - last).TotalSeconds));
                 last = stopwatch.Elapsed;
+
+                NetworkCoordinator.ReportStatusIfNecessary().Wait();
             }
 
             for (var i = 0; i < first.Count; ++i)
