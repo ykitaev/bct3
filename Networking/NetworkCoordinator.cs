@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using System.IO;
 using Configuration;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Net;
 
-namespace Cruncher
+namespace Networking
 {
     static class NetworkCoordinator
     {
         private static DateTime LastCheckedIn = new DateTime(2007, 1, 1);
-        private static TimeSpan CheckInInterval = TimeSpan.FromMinutes(30);
+        public static TimeSpan CheckInInterval = TimeSpan.FromMinutes(30);
 
         public static async Task UploadHopesBlobAsync(string fileName)
         {
@@ -42,6 +41,7 @@ namespace Cruncher
                 var entity = new MachineStatus()
                 {
                     LastActiveUtc = DateTime.UtcNow,
+                    DeviceName = Environment.MachineName,
                 };
 
                 Console.WriteLine("Reporting activity for device '{0}'", entity.DeviceName);
@@ -60,6 +60,20 @@ namespace Cruncher
             }
 
             LastCheckedIn = DateTime.UtcNow;
+        }
+
+        public static IEnumerable<MachineStatus> GetDevicesStatus()
+        {
+            var storageAccount = CloudStorageAccount.Parse(File.ReadAllText(Constants.AzureConnectionStringFileName));
+            var tableClient = storageAccount.CreateCloudTableClient();
+            var table = tableClient.GetTableReference("devices");
+            TableQuery<MachineStatus> query = new TableQuery<MachineStatus>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "devices"));
+
+            // Print the fields for each customer.
+            foreach (MachineStatus entity in table.ExecuteQuery(query))
+            {
+                yield return entity;
+            }
         }
 
         public static async Task<int> GetNextFreeBatchIndex()
@@ -241,7 +255,7 @@ namespace Cruncher
             public byte[] part3 { get; set; }
         }
 
-        private class MachineStatus : TableEntity
+        public class MachineStatus : TableEntity
         {
             public MachineStatus()
             {
@@ -250,7 +264,7 @@ namespace Cruncher
                 this.DeviceName = Environment.MachineName;
             }
 
-            public string DeviceName { get; private set; }
+            public string DeviceName { get; set; }
 
             public DateTime LastActiveUtc { get; set; }
         }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "YMath", "Math\YMath.shproj", "{1CDE3A26-330A-43D3-A427-E4AFACEE68E1}"
 EndProject
@@ -13,16 +13,24 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Configuration", "Configurat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerfectPowerDetector", "PerfectPowerDetector\PerfectPowerDetector.csproj", "{1874B56E-A694-4B6A-8ECB-9077CF8041F2}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Networking", "Networking\Networking.shproj", "{C8014FF1-B0F6-49D3-BA4C-9A32C08A0DD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceConsoleDashboard", "DeviceConsoleDashboard\DeviceConsoleDashboard.csproj", "{4B9ECF49-30F0-416F-8FEC-BEE468C8B6DD}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Configuration\Configuration.projitems*{b27bd1f9-ec44-44e0-b639-99c4266fbcb2}*SharedItemsImports = 13
-		Math\Math.projitems*{1cde3a26-330a-43d3-a427-e4afacee68e1}*SharedItemsImports = 13
-		Math\Math.projitems*{1874b56e-a694-4b6a-8ecb-9077cf8041f2}*SharedItemsImports = 4
-		Configuration\Configuration.projitems*{1874b56e-a694-4b6a-8ecb-9077cf8041f2}*SharedItemsImports = 4
-		Math\Math.projitems*{813adbfb-2ee2-4602-958a-e9a788b3eece}*SharedItemsImports = 4
-		Configuration\Configuration.projitems*{813adbfb-2ee2-4602-958a-e9a788b3eece}*SharedItemsImports = 4
-		Math\Math.projitems*{1861bf55-91cf-4719-9aba-fcd451399eb1}*SharedItemsImports = 4
 		Configuration\Configuration.projitems*{1861bf55-91cf-4719-9aba-fcd451399eb1}*SharedItemsImports = 4
+		Math\Math.projitems*{1861bf55-91cf-4719-9aba-fcd451399eb1}*SharedItemsImports = 4
+		Configuration\Configuration.projitems*{1874b56e-a694-4b6a-8ecb-9077cf8041f2}*SharedItemsImports = 4
+		Math\Math.projitems*{1874b56e-a694-4b6a-8ecb-9077cf8041f2}*SharedItemsImports = 4
+		Math\Math.projitems*{1cde3a26-330a-43d3-a427-e4afacee68e1}*SharedItemsImports = 13
+		Configuration\Configuration.projitems*{4b9ecf49-30f0-416f-8fec-bee468c8b6dd}*SharedItemsImports = 4
+		Networking\Networking.projitems*{4b9ecf49-30f0-416f-8fec-bee468c8b6dd}*SharedItemsImports = 4
+		Configuration\Configuration.projitems*{813adbfb-2ee2-4602-958a-e9a788b3eece}*SharedItemsImports = 4
+		Math\Math.projitems*{813adbfb-2ee2-4602-958a-e9a788b3eece}*SharedItemsImports = 4
+		Networking\Networking.projitems*{813adbfb-2ee2-4602-958a-e9a788b3eece}*SharedItemsImports = 4
+		Configuration\Configuration.projitems*{b27bd1f9-ec44-44e0-b639-99c4266fbcb2}*SharedItemsImports = 13
+		Networking\Networking.projitems*{c8014ff1-b0f6-49d3-ba4c-9a32c08a0dd4}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +63,14 @@ Global
 		{1874B56E-A694-4B6A-8ECB-9077CF8041F2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1874B56E-A694-4B6A-8ECB-9077CF8041F2}.Release|x64.ActiveCfg = Release|x64
 		{1874B56E-A694-4B6A-8ECB-9077CF8041F2}.Release|x64.Build.0 = Release|x64
+		{4B9ECF49-30F0-416F-8FEC-BEE468C8B6DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B9ECF49-30F0-416F-8FEC-BEE468C8B6DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B9ECF49-30F0-416F-8FEC-BEE468C8B6DD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4B9ECF49-30F0-416F-8FEC-BEE468C8B6DD}.Debug|x64.Build.0 = Debug|Any CPU
+		{4B9ECF49-30F0-416F-8FEC-BEE468C8B6DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B9ECF49-30F0-416F-8FEC-BEE468C8B6DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B9ECF49-30F0-416F-8FEC-BEE468C8B6DD}.Release|x64.ActiveCfg = Release|Any CPU
+		{4B9ECF49-30F0-416F-8FEC-BEE468C8B6DD}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
