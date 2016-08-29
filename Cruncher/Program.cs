@@ -141,7 +141,7 @@
             Console.WriteLine("Running tests..");
             var r = new Random();
             var every = r.Next(150, 300);
-            Console.WriteLine("Going to verify ever {0}th number", every);
+            Console.WriteLine("Going to verify every {0}th number", every);
             int i = 0;
             var pg = new PowersEnumerator();
             while(pg.HasMore())

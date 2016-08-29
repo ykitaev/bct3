@@ -14,6 +14,7 @@ namespace DeviceConsoleDashboard
             while(true)
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("Refreshing...");
                 var devices = NetworkCoordinator.GetDevicesStatus().ToList();
                 Console.Clear();
