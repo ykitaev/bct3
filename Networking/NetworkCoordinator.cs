@@ -90,6 +90,11 @@ namespace Networking
                     {
                         return i;
                     }
+                    else
+                    {
+                        // Crash for now; not immediately clear how to safely update the "map" while iterating over it
+                        throw new InvalidOperationException("Conflict!");
+                    }
                 }
             }
 
@@ -101,6 +106,11 @@ namespace Networking
                     {
                         return i;
                     }
+                    else
+                    {
+                        // Crash for now; not immediately clear how to safely update the "map" while iterating over it
+                        throw new InvalidOperationException("Conflict!");
+                    }
                 }
             }
 
@@ -111,6 +121,11 @@ namespace Networking
                     if (await CheckOut(map, 3, i))
                     {
                         return i;
+                    }
+                    else
+                    {
+                        // Crash for now; not immediately clear how to safely update the "map" while iterating over it
+                        throw new InvalidOperationException("Conflict!");
                     }
                 }
             }

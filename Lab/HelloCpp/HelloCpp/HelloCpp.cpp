@@ -8,6 +8,7 @@
 #include <sstream>
 #include <string>
 #include <tuple>
+#include <fstream>
 
 #include "bigint-2010.04.30\BigIntegerLibrary.hh"
 #include "BloomFilterBigInteger.cpp"
@@ -100,29 +101,44 @@ int crc(BigInteger big)
 vector<string> ix = { initializer_list<string>{"a", "bb", "cc", "dddddd"} };
 int main()
 {
-	 BloomFilter<8> bf(178000000, 0.004f, crc);
+	// BloomFilter<8> bf(178000000, 0.004f, crc);
 
-	 auto i = PowerIter();
-	 PowerIter p;
+	// auto i = PowerIter();
+	// PowerIter p;
+	// auto cnt = 0;
+	// long checksum = 0;
+	// for (p= begin(i); p != i.end(); ++p)
+	// {
+	//	 auto base = get<0>(*p);
+	//	 auto exp = get<1>(*p);
+	//	 auto ax = xpow(base, exp);
+	//	 //auto c = crc(ax);
+	//	// auto hc = ax.GetHashCode();
+	//	 //checksum += (c + hc);
+	//	 //bf.Add(ax);
+	//	 ++cnt;
+	//	 if (cnt % 10000 == 0)
+	//		 cout << cnt << endl;
+	// }
+	// // cout << get<0>(*p) << "^" << get<1>(*p) << endl;
+
+	 std::ifstream infile("M:\\temp\\perfectx.txt");
+	 int a, x;
+	 string ax;
 	 auto cnt = 0;
-	 long checksum = 0;
-	 for (p= begin(i); p != i.end(); ++p)
+	 auto sum = 0;
+	 while (infile >> a >> x >> ax)
 	 {
-		 auto base = get<0>(*p);
-		 auto exp = get<1>(*p);
-		 auto ax = xpow(base, exp);
-		 auto c = crc(ax);
-		 auto hc = ax.GetHashCode();
-		 checksum += (c + hc);
-		 //bf.Add(ax);
-		 ++cnt;
-		 if (cnt % 1000000 == 0)
-			 cout << cnt << endl;
+		 // cout << a << "^" << x << "=" << ax << endl;
+		 cnt++;
+		 sum += (a + x);
+		 BigInteger bi = stringToBigInteger(ax);
+		 sum += bi.getLength();
+		 // process pair (a,b)
 	 }
-	 // cout << get<0>(*p) << "^" << get<1>(*p) << endl;
-
+	 cout << cnt << ", " << sum;
 	 // cout << bf.Truthiness();
-	 cout << checksum;
+	 //cout << checksum;
 	return 0;
 }
 
