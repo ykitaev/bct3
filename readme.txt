@@ -1,2 +1,1 @@
-This is a just a random set of code files I need to move around across my numerous computers and number-crunching VMs. 
-Not a real project yet, but if it does what it's supposed to do, it will probably be rather famous.
+Search for a Counterexample to Beal Conjecture
